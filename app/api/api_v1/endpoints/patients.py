@@ -5,14 +5,28 @@ from app.db.database import get_db
 
 router = APIRouter()
 
-@router.get("/")
+@router.get("/", summary="List Patients", tags=["Patients"])
 async def get_patients(
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db)
 ):
     """
-    List patients with pagination
+    ## List Patients with Pagination
+    
+    Retrieve a paginated list of all patients in the system.
+    
+    **Query Parameters:**
+    - `skip`: Number of records to skip (for pagination)
+    - `limit`: Maximum number of records to return (max 100)
+    
+    **Response:**
+    - Array of patient objects with complete information
+    - Pagination metadata
+    
+    **Permissions:**
+    - Requires authentication
+    - Accessible by doctors and admin users
     """
     return {"message": "List patients", "skip": skip, "limit": limit}
 

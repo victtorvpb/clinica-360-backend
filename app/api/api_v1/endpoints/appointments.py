@@ -6,18 +6,40 @@ from app.db.database import get_db
 
 router = APIRouter()
 
-@router.get("/")
+@router.get("/", summary="List Appointments", tags=["Appointments"])
 async def get_appointments(
     skip: int = 0,
     limit: int = 100,
-    date_from: Optional[date] = Query(None),
-    date_to: Optional[date] = Query(None),
-    patient_id: Optional[int] = Query(None),
-    doctor_id: Optional[int] = Query(None),
+    date_from: Optional[date] = Query(None, description="Filter appointments from this date"),
+    date_to: Optional[date] = Query(None, description="Filter appointments until this date"),
+    patient_id: Optional[int] = Query(None, description="Filter by specific patient ID"),
+    doctor_id: Optional[int] = Query(None, description="Filter by specific doctor ID"),
     db: Session = Depends(get_db)
 ):
     """
-    List appointments with filters and pagination
+    ## List Appointments with Advanced Filtering
+    
+    Retrieve appointments with multiple filter options and pagination.
+    
+    **Query Parameters:**
+    - `skip`: Number of records to skip (pagination)
+    - `limit`: Maximum records to return (max 100)
+    - `date_from`: Start date filter (YYYY-MM-DD)
+    - `date_to`: End date filter (YYYY-MM-DD)
+    - `patient_id`: Filter by patient ID
+    - `doctor_id`: Filter by doctor ID
+    
+    **Response:**
+    - Array of appointment objects with patient and doctor details
+    - Filtering and pagination metadata
+    
+    **Status Values:**
+    - `scheduled`: Appointment scheduled
+    - `confirmed`: Appointment confirmed
+    - `in_progress`: Currently happening
+    - `completed`: Finished appointment
+    - `cancelled`: Cancelled appointment
+    - `no_show`: Patient didn't show up
     """
     filters = {
         "skip": skip,

@@ -1,23 +1,42 @@
-FROM python:3.11-slim
+# Dockerfile with Alpine Linux
+FROM python:3.11-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    gcc \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Copy requirements and install Python dependencies
+# Install system dependencies
+RUN apk update && \
+    apk add --no-cache \
+    gcc \
+    g++ \
+    musl-dev \
+    postgresql-dev \
+    postgresql-client \
+    build-base \
+    linux-headers \
+    bash \
+    && rm -rf /var/cache/apk/*
+
+# Copy requirements first for better caching
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+
+# Install Python dependencies
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . .
 
+# Copy and make entrypoint script executable
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Expose port
 EXPOSE 8000
 
-# Default command
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"] 
+# Use entrypoint script
+ENTRYPOINT ["/entrypoint.sh"] 

@@ -86,14 +86,19 @@ cp env.example .env
 nano .env
 ```
 
-### 2. Rodar com Docker (Recomendado)
+### 2. Run with Docker (Recommended)
 
 ```bash
-# Subir PostgreSQL e a aplicação
+# Start PostgreSQL and application
 docker-compose up -d
 
-# Ver logs
+# View logs
 docker-compose logs -f api
+
+# OR use Makefile commands:
+make up        # Start services
+make logs      # View logs
+make swagger   # Generate OpenAPI file
 ```
 
 ### 3. Executar Migrações
@@ -128,11 +133,12 @@ alembic upgrade head
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-## 🌐 Acesso
+## 🌐 Access
 
 - **API**: <http://localhost:8000>
-- **Documentação Swagger**: <http://localhost:8000/docs>
+- **Swagger Documentation**: <http://localhost:8000/docs>
 - **ReDoc**: <http://localhost:8000/redoc>
+- **OpenAPI JSON**: <http://localhost:8000/api/v1/openapi.json>
 - **PostgreSQL**: localhost:5432
 
 ### Credenciais do Banco (Desenvolvimento)
