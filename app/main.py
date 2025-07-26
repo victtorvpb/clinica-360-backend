@@ -68,7 +68,39 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 @app.get("/health", tags=["Health"])
 async def health_check():
     """Health check endpoint for monitoring and deployment platforms."""
-    return {"status": "healthy", "message": "Clinica 360 API is running!"}
+    try:
+        from app.db.database import SessionLocal
+        
+        # Test database connection
+        db = SessionLocal()
+        try:
+            # Simple query to test connection
+            db.execute("SELECT 1")
+            db_status = "connected"
+        except Exception as e:
+            db_status = f"error: {str(e)[:100]}"
+        finally:
+            db.close()
+            
+        return {
+            "status": "healthy", 
+            "message": "Clinica 360 API is running!",
+            "database": db_status,
+            "timestamp": "2025-07-26T00:00:00Z"
+        }
+    except Exception as e:
+                 return {
+             "status": "error",
+             "message": f"Health check failed: {str(e)[:100]}",
+             "database": "unknown",
+             "timestamp": "2025-07-26T00:00:00Z"
+         }
+
+# Simple ping endpoint for basic connectivity test
+@app.get("/ping", tags=["Health"])
+async def ping():
+    """Simple ping endpoint without database dependency."""
+    return {"ping": "pong", "message": "API is responding"}
 
 # Define tags metadata for better Swagger organization
 tags_metadata = [
