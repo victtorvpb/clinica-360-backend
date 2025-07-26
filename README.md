@@ -227,12 +227,13 @@ DEBUG=True
 
 ## 🚀 Deploy
 
-### Produção
+### Opções de Deploy
 
-1. **Configurar variáveis de ambiente de produção**
-2. **Usar banco PostgreSQL dedicado**
-3. **Configurar HTTPS**
-4. **Usar servidor WSGI (Gunicorn)**
+1. **🆓 Render (100% gratuito)**: Ver `DEPLOY-RENDER.md` 
+2. **💰 VPS barato ($5/mês)**: Ver `DEPLOY-VPS.md`
+3. **✈️ Fly.io (tier gratuito)**: Via CLI `flyctl`
+
+### Deploy Local para Produção
 
 ```bash
 # Exemplo para produção

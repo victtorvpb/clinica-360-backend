@@ -1,0 +1,53 @@
+services:
+  # PostgreSQL Database
+  - type: pserv
+    name: clinica-360-postgres
+    env: docker
+    plan: free
+
+  # Web API Service
+  - type: web
+    name: clinica-360-api
+    env: docker
+    plan: free
+    repo: https://github.com/seu-usuario/clinica-360-backend.git
+    buildCommand: docker build -t clinica-360-api .
+    startCommand: /entrypoint.sh
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: POSTGRES_SERVER
+        fromService:
+          type: pserv
+          name: clinica-360-postgres
+          property: host
+      - key: POSTGRES_PORT
+        fromService:
+          type: pserv
+          name: clinica-360-postgres
+          property: port
+      - key: POSTGRES_USER
+        fromService:
+          type: pserv
+          name: clinica-360-postgres
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromService:
+          type: pserv
+          name: clinica-360-postgres
+          property: password
+      - key: POSTGRES_DB
+        fromService:
+          type: pserv
+          name: clinica-360-postgres
+          property: database
+      - key: DATABASE_URL
+        fromService:
+          type: pserv
+          name: clinica-360-postgres
+          property: connectionString
