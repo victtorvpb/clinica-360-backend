@@ -229,9 +229,9 @@ DEBUG=True
 
 ### Opções de Deploy
 
-1. **🆓 Render (100% gratuito)**: Ver `DEPLOY-RENDER.md` 
-2. **💰 VPS barato ($5/mês)**: Ver `DEPLOY-VPS.md`
-3. **✈️ Fly.io (tier gratuito)**: Via CLI `flyctl`
+1. **🔥 Supabase + Railway (~$5/mês)**: Ver `DEPLOY-SUPABASE-RAILWAY.md` ⭐
+2. **✈️ Fly.io (tier gratuito)**: Via CLI `flyctl`
+3. **🐳 Docker local**: Para desenvolvimento
 
 ### Deploy Local para Produção
 

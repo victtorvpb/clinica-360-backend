@@ -64,6 +64,12 @@ app.add_middleware(
 # Include API routes
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
+# Health check endpoint for Railway and monitoring
+@app.get("/health", tags=["Health"])
+async def health_check():
+    """Health check endpoint for monitoring and deployment platforms."""
+    return {"status": "healthy", "message": "Clinica 360 API is running!"}
+
 # Define tags metadata for better Swagger organization
 tags_metadata = [
     {

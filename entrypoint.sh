@@ -8,7 +8,7 @@ echo "🔄 Starting Clinica 360 API..."
 # Wait for PostgreSQL to be ready
 echo "⏳ Waiting for PostgreSQL to be ready..."
 
-# If using Render DATABASE_URL, extract connection details
+# If using DATABASE_URL, extract connection details
 if [ ! -z "$DATABASE_URL" ]; then
   echo "Using DATABASE_URL for connection"
   # Extract host and port from DATABASE_URL for pg_isready
@@ -39,8 +39,8 @@ echo "✅ Migrations completed!"
 # Start the FastAPI application
 echo "🚀 Starting FastAPI application..."
 
-# Use PORT from Render if available, default to 10000 (Render default)
-PORT=${PORT:-10000}
+# Use PORT from Railway if available, default to 8000
+PORT=${PORT:-8000}
 
 # Disable reload in production
 if [ "$ENVIRONMENT" = "production" ]; then
