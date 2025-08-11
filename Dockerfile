@@ -1,5 +1,5 @@
 # Use Python 3.12 slim image for ARM64 (M1/M2)
-FROM python:3.12-slim-bullseye
+FROM python:3.12-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -12,11 +12,13 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Add Poetry to PATH
 ENV PATH="$POETRY_HOME/bin:$PATH"
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Install system dependencies and security updates
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     curl \
     libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* /var/tmp/*
 
 # Install Poetry
 RUN curl -sSL https://install.python-poetry.org | python3 -
