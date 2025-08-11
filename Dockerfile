@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     POETRY_VERSION=2.1.4 \
     POETRY_HOME="/opt/poetry" \
-    POETRY_VENV_IN_PROJECT=1 \
+    POETRY_VENV_IN_PROJECT=0 \
     POETRY_CACHE_DIR='/var/cache/pypoetry'
 
 # Add Poetry to PATH
@@ -29,8 +29,8 @@ WORKDIR /app
 # Copy Poetry files
 COPY pyproject.toml poetry.lock* ./
 
-# Install dependencies
-RUN poetry install --only main --no-interaction --no-ansi --no-root
+# Install dependencies globally (no virtualenv)
+RUN poetry config virtualenvs.create false && poetry install --only main --no-interaction --no-ansi --no-root
 
 # Copy application code
 COPY . .
@@ -47,4 +47,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
 # Run the application
-CMD ["poetry", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

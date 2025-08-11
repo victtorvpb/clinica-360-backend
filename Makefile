@@ -95,10 +95,10 @@ migrate:
 
 migrate-create:
 	@if [ -z "$(MESSAGE)" ]; then echo "Please specify MESSAGE parameter"; exit 1; fi
-	docker-compose exec api poetry run alembic revision --autogenerate -m "$(MESSAGE)"
+	docker-compose exec api alembic revision --autogenerate -m "$(MESSAGE)"
 
 migrate-upgrade:
-	docker-compose exec api poetry run alembic upgrade head
+	docker-compose exec api alembic upgrade head
 
 migrate-downgrade:
-	docker-compose exec api poetry run alembic downgrade -1
+	docker-compose exec api alembic downgrade -1
