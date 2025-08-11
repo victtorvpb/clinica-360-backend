@@ -4,7 +4,12 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: ./start.sh
+    startCommand: |
+      echo "🚀 Iniciando Clinica 360 API..."
+      echo "📦 Executando migrations..."
+      alembic upgrade head
+      echo "🌐 Iniciando servidor..."
+      uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.0
