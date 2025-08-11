@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: clinica-360-api
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: clinica-360-db
+          property: connectionString
+      - key: ENVIRONMENT
+        value: production
+
+databases:
+  - name: clinica-360-db
+    databaseName: clinica360
+    user: clinica360
+    plan: free
