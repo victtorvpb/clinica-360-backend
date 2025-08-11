@@ -1,4 +1,4 @@
-.PHONY: help build up down logs shell clean test
+.PHONY: help build up down logs shell clean test migrate migrate-create migrate-upgrade migrate-downgrade
 
 # Default target
 help:
@@ -13,6 +13,11 @@ help:
 	@echo "  clean    - Remove containers, networks, and volumes"
 	@echo "  test     - Test the API endpoints"
 	@echo "  restart  - Restart all services"
+	@echo ""
+	@echo "Migration commands:"
+	@echo "  migrate-create MESSAGE='desc' - Create new migration"
+	@echo "  migrate-upgrade              - Apply pending migrations"
+	@echo "  migrate-downgrade            - Rollback last migration"
 
 # Build Docker images
 build:
@@ -80,3 +85,20 @@ db-restore:
 	@echo "Usage: make db-restore FILE=backup_file.sql"
 	@if [ -z "$(FILE)" ]; then echo "Please specify FILE parameter"; exit 1; fi
 	docker-compose exec -T db psql -U clinica360 -d clinica360 < $(FILE)
+
+# Migration commands
+migrate:
+	@echo "Available migration commands:"
+	@echo "  make migrate-create MESSAGE='description' - Create new migration"
+	@echo "  make migrate-upgrade                     - Apply all pending migrations"
+	@echo "  make migrate-downgrade                   - Rollback last migration"
+
+migrate-create:
+	@if [ -z "$(MESSAGE)" ]; then echo "Please specify MESSAGE parameter"; exit 1; fi
+	docker-compose exec api poetry run alembic revision --autogenerate -m "$(MESSAGE)"
+
+migrate-upgrade:
+	docker-compose exec api poetry run alembic upgrade head
+
+migrate-downgrade:
+	docker-compose exec api poetry run alembic downgrade -1
